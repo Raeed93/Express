@@ -4,6 +4,7 @@ const express = require('express'),
      const bodyParser = require('body-parser');
 
      const dishRouter = require('./routes/dishRouter');
+     const promoRouter = require('./routes/promoRouter');
 
 const hostname = 'localhost';
 const port = 3000;
@@ -12,8 +13,10 @@ const app = express();
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use('/dishes', dishRouter);
+app.use('/promotions', promoRouter);
 
-app.all('/dishes', (req,res,next) => {
+
+app.all('/dishes',  (req,res,next) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/plain');
     next();
@@ -35,6 +38,71 @@ app.all('/dishes', (req,res,next) => {
   app.delete('/dishes', (req, res, next) => {
     res.end('Deleting all dishes');
 });
+
+app.get('/dishes/:dishId', (req,res,next) => {
+    res.end('Will send details of the dish: ' + req.params.dishId +' to you!');
+});
+
+app.post('/dishes/:dishId', (req, res, next) => {
+  res.statusCode = 403;
+  res.end('POST operation not supported on /dishes/'+ req.params.dishId);
+});
+
+app.put('/dishes/:dishId', (req, res, next) => {
+  res.write('Updating the dish: ' + req.params.dishId + '\n');
+  res.end('Will update the dish: ' + req.body.name + 
+        ' with details: ' + req.body.description);
+});
+
+app.delete('/dishes/:dishId', (req, res, next) => {
+    res.end('Deleting dish: ' + req.params.dishId);
+});
+
+
+app.all('/promotions', (req, res, next) => {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/plain');
+    next();
+})
+
+  app.get('/promotions', (req,res,next) => {
+      res.end('Will send all the promotions to you!');
+  });
+
+  app.post('/promotions', (req, res, next) => {
+    res.end('Will add the promotion: ' + req.body.name + ' with details: ' + req.body.description);
+   });
+
+   app.put('/promotions', (req, res, next) => {
+    res.statusCode = 403;
+    res.end('PUT operation not supported on /promotions');
+  });
+
+  app.delete('/promotions', (req, res, next) => {
+    res.end('Deleting all promotions');
+});
+
+app.get('/promotions/:promoId', (req,res,next) => {
+    res.end('Will send details of the promotion: ' + req.params.promoId +' to you!');
+});
+
+app.post('/promotions/:promoId', (req, res, next) => {
+  res.statusCode = 403;
+  res.end('POST operation not supported on /promotions/'+ req.params.promoId);
+});
+
+app.put('/promotions/:promoId', (req, res, next) => {
+  res.write('Updating the promotion: ' + req.params.promoId + '\n');
+  res.end('Will update the promotion: ' + req.body.name + 
+        ' with details: ' + req.body.description);
+});
+
+app.delete('/promotions/:promoId', (req, res, next) => {
+    res.end('Deleting promotion: ' + req.params.promoId);
+});
+
+
+
 
 
 app.use(express.static(__dirname+ '/public'))
